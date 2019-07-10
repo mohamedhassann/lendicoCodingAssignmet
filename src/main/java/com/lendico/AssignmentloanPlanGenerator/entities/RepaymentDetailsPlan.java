@@ -15,4 +15,8 @@ public class RepaymentDetailsPlan {
     public void setRepaymentDetailsList(List<RepaymentDetails> repaymentDetailsList) {
         this.repaymentDetailsList = repaymentDetailsList;
     }
+
+    public void addPlans(RepaymentDetails repaymentDetails) {
+        this.repaymentDetailsList.add(repaymentDetails);
+    }
 }
