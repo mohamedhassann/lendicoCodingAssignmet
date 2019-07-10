@@ -1,4 +1,4 @@
 package com.lendico.AssignmentloanPlanGenerator.entities;
 
-public class Repayment {
+public class RepaymentDetails {
 }
