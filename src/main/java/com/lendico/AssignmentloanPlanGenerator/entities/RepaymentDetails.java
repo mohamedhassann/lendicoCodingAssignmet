@@ -1,7 +1,7 @@
 package com.lendico.AssignmentloanPlanGenerator.entities;
 
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author Mohamed M.Hassan
@@ -17,7 +17,7 @@ public class RepaymentDetails {
     private double remainingOustandingPrincipal;
     private double interest;
     private double principal;
-    private LocalDate date;
+    private LocalDateTime date;
 
     public double getBorrowerPaymentAmount() {
         return borrowerPaymentAmount;
@@ -59,11 +59,11 @@ public class RepaymentDetails {
         this.principal = principal;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }
