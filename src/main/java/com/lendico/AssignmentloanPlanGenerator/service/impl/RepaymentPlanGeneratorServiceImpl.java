@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.stream.IntStream;
 
 @Service
 public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGeneratorService {
@@ -21,37 +22,58 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
         double loanAmount = repaymentInputs.getLoanAmount();
         double nominalRate = repaymentInputs.getNominalRate();
         int duration = repaymentInputs.getDuration();
-        double initialOutstandingPrincipal = loanAmount;
+        final double[] initialOutstandingPrincipal = {loanAmount};
         LocalDateTime startDate = repaymentInputs.getStartDate();
 
         if (loanAmount <= 0 || nominalRate <= 0 || duration <= 0) {
             throw new RepaymentPlanGeneratorException("Input values for loan cannot be negative");
         }
-        double accumaltedInterest = 0;
-        double totalAmountPaid = 0;
+        final double[] accumaltedInterest = {0};
+        final double[] totalAmountPaid = {0};
 
         RepaymentDetailsPlan repaymentDetailsPlan = new RepaymentDetailsPlan();
 
-        RepaymentDetails repaymentDetails = null;
+        final RepaymentDetails[] repaymentDetails = {null};
 
-        for (int i = 0; i < duration; i++) {
+//        for (int i = 0; i < duration; i++) {
+//
+//            repaymentDetails = generateMonthlyRepaymentPlan(loanAmount, nominalRate, duration, startDate, initialOutstandingPrincipal, i);
+//            initialOutstandingPrincipal = repaymentDetails.getRemainingOustandingPrincipal();
+//            repaymentDetailsPlan.addPlans(repaymentDetails);
+//
+//            accumaltedInterest = accumaltedInterest + repaymentDetails.getInterest();
+//            totalAmountPaid = loanAmount + accumaltedInterest;
+//
+//
+//            /*Calculation of annuity in case of the last month*/
+//            if (i == duration - 1) {
+//                double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1))));
+//
+//                repaymentDetails.setBorrowerPaymentAmount(lastAnnuity);
+//                repaymentDetails.setPrincipal(repaymentDetails.getBorrowerPaymentAmount() - repaymentDetails.getInterest());
+//            }
+//        }
 
-            repaymentDetails = generateMonthlyRepaymentPlan(loanAmount, nominalRate, duration, startDate, initialOutstandingPrincipal, i);
-            initialOutstandingPrincipal = repaymentDetails.getRemainingOustandingPrincipal();
-            repaymentDetailsPlan.addPlans(repaymentDetails);
+        IntStream.range(0, duration).forEach(
+             i -> {
+                 repaymentDetails[0] = generateMonthlyRepaymentPlan(loanAmount, nominalRate, duration, startDate, initialOutstandingPrincipal[0], i);
+                 initialOutstandingPrincipal[0] = repaymentDetails[0].getRemainingOustandingPrincipal();
+                 repaymentDetailsPlan.addPlans(repaymentDetails[0]);
 
-            accumaltedInterest = accumaltedInterest + repaymentDetails.getInterest();
-            totalAmountPaid = loanAmount + accumaltedInterest;
+                 accumaltedInterest[0] = accumaltedInterest[0] + repaymentDetails[0].getInterest();
+                 totalAmountPaid[0] = loanAmount + accumaltedInterest[0];
 
 
-            /*Calculation of annuity in case of the last month*/
-            if (i == duration - 1) {
-                double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1))));
+                 /*Calculation of annuity in case of the last month*/
+                 if (i == duration - 1) {
+                     double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid[0] - (repaymentDetails[0].getBorrowerPaymentAmount() * (duration - 1))));
 
-                repaymentDetails.setBorrowerPaymentAmount(lastAnnuity);
-                repaymentDetails.setPrincipal(repaymentDetails.getBorrowerPaymentAmount() - repaymentDetails.getInterest());
-            }
-        }
+                     repaymentDetails[0].setBorrowerPaymentAmount(lastAnnuity);
+                     repaymentDetails[0].setPrincipal(repaymentDetails[0].getBorrowerPaymentAmount() - repaymentDetails[0].getInterest());
+                 }
+             }
+
+        );
         return repaymentDetailsPlan;
     }
 
