@@ -1,7 +1,5 @@
 package com.lendico.AssignmentloanPlanGenerator.entities;
 
-import java.util.Date;
-
 /**
  * @author Mohamed M.Hassan
  */

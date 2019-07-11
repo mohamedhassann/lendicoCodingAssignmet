@@ -2,7 +2,6 @@ package com.lendico.AssignmentloanPlanGenerator.entities;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class RepaymentInputs {
     private double loanAmount;

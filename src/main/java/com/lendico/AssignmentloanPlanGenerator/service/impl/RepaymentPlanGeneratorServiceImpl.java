@@ -7,9 +7,7 @@ import com.lendico.AssignmentloanPlanGenerator.exceptions.RepaymentPlanGenerator
 import com.lendico.AssignmentloanPlanGenerator.service.RepaymentPlanGeneratorService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -26,18 +24,17 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
         double initialOutstandingPrincipal = loanAmount;
         LocalDateTime startDate = repaymentInputs.getStartDate();
 
-        if(loanAmount <= 0 || nominalRate <= 0 || duration <= 0){
+        if (loanAmount <= 0 || nominalRate <= 0 || duration <= 0) {
             throw new RepaymentPlanGeneratorException("Input values for loan cannot be negative");
         }
         double accumaltedInterest = 0;
         double totalAmountPaid = 0;
-        /* Annuity. */
-        double annuity = getAnnuity(loanAmount, nominalRate, duration);
+
         RepaymentDetailsPlan repaymentDetailsPlan = new RepaymentDetailsPlan();
 
         RepaymentDetails repaymentDetails = null;
 
-        for(int i = 0; i < duration; i++){
+        for (int i = 0; i < duration; i++) {
 
             repaymentDetails = generateMonthlyRepaymentPlan(loanAmount, nominalRate, duration, startDate, initialOutstandingPrincipal, i);
             initialOutstandingPrincipal = repaymentDetails.getRemainingOustandingPrincipal();
@@ -48,14 +45,13 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
 
 
             /*Calculation of annuity in case of the last month*/
-            if(i == duration -1){
+            if (i == duration - 1) {
                 double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1))));
 
                 repaymentDetails.setBorrowerPaymentAmount(lastAnnuity);
                 repaymentDetails.setPrincipal(repaymentDetails.getBorrowerPaymentAmount() - repaymentDetails.getInterest());
             }
         }
-        //repaymentDetailsPlan.addPlans(repaymentDetails);
         return repaymentDetailsPlan;
     }
 
@@ -90,21 +86,24 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
 
 
     private double getAnnuity(double loanAmount, double nominalRate, int duration) {
-        nominalRate = Double.parseDouble(df.format(nominalRate /100));
+        nominalRate = Double.parseDouble(df.format(nominalRate / 100));
         double nominalRateByMonth = nominalRate / 12;
-        return Double.parseDouble(df.format((loanAmount * nominalRateByMonth) / (1 - Math.pow(1 + nominalRateByMonth,-duration))));
+        return Double.parseDouble(df.format((loanAmount * nominalRateByMonth) / (1 - Math.pow(1 + nominalRateByMonth, -duration))));
     }
-    private double getRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal){
+
+    private double getRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal) {
         double remainingOutstandingPrincipal = Double.parseDouble(df.format(initialOutstandingPrincipal - principal));
-        if(remainingOutstandingPrincipal < 0){
+        if (remainingOutstandingPrincipal < 0) {
             remainingOutstandingPrincipal = 0;
         }
         return remainingOutstandingPrincipal;
     }
-    private double getPrincipal(double interest, double annuity){
+
+    private double getPrincipal(double interest, double annuity) {
         return Double.parseDouble(df.format(annuity - interest));
     }
-    private double getInterest(double nominalRate, double initialOutstandingPrincipal){
-        return Double.parseDouble(df.format((nominalRate * 30 * initialOutstandingPrincipal / 360)  / 100));
+
+    private double getInterest(double nominalRate, double initialOutstandingPrincipal) {
+        return Double.parseDouble(df.format((nominalRate * 30 * initialOutstandingPrincipal / 360) / 100));
     }
 }

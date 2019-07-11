@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * @author Mohamed M.Hassan
- *
+ * <p>
  * This class represent the details of repayment that should done every month
  * i.e The attributes of the generated plan
  */
@@ -15,12 +15,13 @@ public class RepaymentDetails {
     // The naming of the following attributes based on the sent PDF of the task
 
     private double borrowerPaymentAmount; // annuity
-    private double initialOutstandingPrincipal;
-    private double remainingOustandingPrincipal;
-    private double interest;
-    private double principal;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime date;
+    private double initialOutstandingPrincipal;
+    private double interest;
+    private double principal;
+    private double remainingOustandingPrincipal;
+
 
     public double getBorrowerPaymentAmount() {
         return borrowerPaymentAmount;
