@@ -13,12 +13,12 @@ public class RepaymentDetailsPlan {
         this.plans = new ArrayList<>();
     }
 
-    public List<RepaymentDetails> getRepaymentDetailsList() {
+    public List<RepaymentDetails> getPlans() {
         return plans;
     }
 
-    public void setRepaymentDetailsList(List<RepaymentDetails> repaymentDetailsList) {
-        this.plans = repaymentDetailsList;
+    public void setPlans(List<RepaymentDetails> plans) {
+        this.plans = plans;
     }
 
     public void addPlans(RepaymentDetails repaymentDetails) {
