@@ -34,25 +34,7 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
         RepaymentDetailsPlan repaymentDetailsPlan = new RepaymentDetailsPlan();
 
         final RepaymentDetails[] repaymentDetails = {null};
-
-//        for (int i = 0; i < duration; i++) {
-//
-//            repaymentDetails = generateMonthlyRepaymentPlan(loanAmount, nominalRate, duration, startDate, initialOutstandingPrincipal, i);
-//            initialOutstandingPrincipal = repaymentDetails.getRemainingOustandingPrincipal();
-//            repaymentDetailsPlan.addPlans(repaymentDetails);
-//
-//            accumaltedInterest = accumaltedInterest + repaymentDetails.getInterest();
-//            totalAmountPaid = loanAmount + accumaltedInterest;
-//
-//
-//            /*Calculation of annuity in case of the last month*/
-//            if (i == duration - 1) {
-//                double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1))));
-//
-//                repaymentDetails.setBorrowerPaymentAmount(lastAnnuity);
-//                repaymentDetails.setPrincipal(repaymentDetails.getBorrowerPaymentAmount() - repaymentDetails.getInterest());
-//            }
-//        }
+        
 
         IntStream.range(0, duration).forEach(
              i -> {
