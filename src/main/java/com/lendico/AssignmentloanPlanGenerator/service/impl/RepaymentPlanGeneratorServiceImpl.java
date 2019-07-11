@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @Service
 public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGeneratorService {
 
+    private static DecimalFormat df = new DecimalFormat("0.00");
+
     @Override
     public RepaymentDetailsPlan generateRepaymentPlan(RepaymentInputs repaymentInputs) {
 
@@ -32,6 +34,7 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
         /* Annuity. */
         double annuity = getAnnuity(loanAmount, nominalRate, duration);
         RepaymentDetailsPlan repaymentDetailsPlan = new RepaymentDetailsPlan();
+
         RepaymentDetails repaymentDetails = null;
 
         for(int i = 0; i < duration; i++){
@@ -40,22 +43,19 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
             initialOutstandingPrincipal = repaymentDetails.getRemainingOustandingPrincipal();
             repaymentDetailsPlan.addPlans(repaymentDetails);
 
-
-
             accumaltedInterest = accumaltedInterest + repaymentDetails.getInterest();
             totalAmountPaid = loanAmount + accumaltedInterest;
 
 
-
             /*Calculation of annuity in case of the last month*/
             if(i == duration -1){
-                double lastAnnuity = totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1));
+                double lastAnnuity = Double.parseDouble(df.format(totalAmountPaid - (repaymentDetails.getBorrowerPaymentAmount() * (duration - 1))));
 
                 repaymentDetails.setBorrowerPaymentAmount(lastAnnuity);
                 repaymentDetails.setPrincipal(repaymentDetails.getBorrowerPaymentAmount() - repaymentDetails.getInterest());
             }
         }
-        repaymentDetailsPlan.addPlans(repaymentDetails);
+        //repaymentDetailsPlan.addPlans(repaymentDetails);
         return repaymentDetailsPlan;
     }
 
@@ -90,21 +90,21 @@ public class RepaymentPlanGeneratorServiceImpl implements RepaymentPlanGenerator
 
 
     private double getAnnuity(double loanAmount, double nominalRate, int duration) {
-        nominalRate = nominalRate /100;
+        nominalRate = Double.parseDouble(df.format(nominalRate /100));
         double nominalRateByMonth = nominalRate / 12;
-        return (loanAmount * nominalRateByMonth) / (1 - Math.pow(1 + nominalRateByMonth,-duration));
+        return Double.parseDouble(df.format((loanAmount * nominalRateByMonth) / (1 - Math.pow(1 + nominalRateByMonth,-duration))));
     }
     private double getRemainingOutstandingPrincipal(double initialOutstandingPrincipal, double principal){
-        double remainingOutstandingPrincipal = initialOutstandingPrincipal - principal;
+        double remainingOutstandingPrincipal = Double.parseDouble(df.format(initialOutstandingPrincipal - principal));
         if(remainingOutstandingPrincipal < 0){
             remainingOutstandingPrincipal = 0;
         }
         return remainingOutstandingPrincipal;
     }
     private double getPrincipal(double interest, double annuity){
-        return annuity - interest;
+        return Double.parseDouble(df.format(annuity - interest));
     }
     private double getInterest(double nominalRate, double initialOutstandingPrincipal){
-        return (nominalRate * 30 * initialOutstandingPrincipal / 360)  / 100;
+        return Double.parseDouble(df.format((nominalRate * 30 * initialOutstandingPrincipal / 360)  / 100));
     }
 }
