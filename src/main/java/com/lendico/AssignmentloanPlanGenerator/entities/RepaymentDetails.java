@@ -1,6 +1,8 @@
 package com.lendico.AssignmentloanPlanGenerator.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 /**
@@ -17,6 +19,7 @@ public class RepaymentDetails {
     private double remainingOustandingPrincipal;
     private double interest;
     private double principal;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime date;
 
     public double getBorrowerPaymentAmount() {
