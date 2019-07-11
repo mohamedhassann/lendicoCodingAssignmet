@@ -1,22 +1,27 @@
 package com.lendico.AssignmentloanPlanGenerator.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Mohamed M.Hassan
  */
 public class RepaymentDetailsPlan {
-    private List<RepaymentDetails> repaymentDetailsList;
+    private List<RepaymentDetails> plans;
+
+    public RepaymentDetailsPlan() {
+        this.plans = new ArrayList<>();
+    }
 
     public List<RepaymentDetails> getRepaymentDetailsList() {
-        return repaymentDetailsList;
+        return plans;
     }
 
     public void setRepaymentDetailsList(List<RepaymentDetails> repaymentDetailsList) {
-        this.repaymentDetailsList = repaymentDetailsList;
+        this.plans = repaymentDetailsList;
     }
 
     public void addPlans(RepaymentDetails repaymentDetails) {
-        this.repaymentDetailsList.add(repaymentDetails);
+        this.plans.add(repaymentDetails);
     }
 }
